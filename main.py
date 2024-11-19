@@ -14,6 +14,7 @@ from objects.ball import Ball
 from objects.paddle import Paddle
 
 if __name__ == '__main__':
+    # initialize pygame
     pygame.init()
 
     # pygame setting variables
