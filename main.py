@@ -16,6 +16,7 @@ from objects.paddle import Paddle
 if __name__ == '__main__':
     # initialize pygame
     pygame.init()
+    pygame.font.init()
 
     # pygame setting variables
     FPS = 50
@@ -24,6 +25,12 @@ if __name__ == '__main__':
     DISPLAY_WIDTH = 600
     DISPLAY_HEIGHT = 800
     screen = pygame.display.set_mode(size=(DISPLAY_WIDTH, DISPLAY_HEIGHT))
+
+    # create fonts
+    SCORE_FONT = pygame.font.Font(None, 30)
+
+    #Text creation
+    Score = SCORE_FONT.render("Hello KITty", True, "green")
 
     # initialize the clock for FPS calculation
     clock = pygame.time.Clock()
@@ -42,6 +49,7 @@ if __name__ == '__main__':
 
     while running:
 
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -59,6 +67,9 @@ if __name__ == '__main__':
         # always draw a black screen. then add objects as needed.
         screen.fill((0,0,0)) #0,0,0 is RGB color code for black
 
+        #show score
+        Score_position = Score.get_rect(center=(100,200))
+        screen.blit(Score, Score_position)
         # draw the ball
         ball.draw(screen)
 
