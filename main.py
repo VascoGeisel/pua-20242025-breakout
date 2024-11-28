@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # create a game screen
     DISPLAY_WIDTH = 600
-    DISPLAY_HEIGHT = 800
+    DISPLAY_HEIGHT = 700
     screen = pygame.display.set_mode(size=(DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
     # create fonts
