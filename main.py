@@ -119,7 +119,7 @@ if __name__ == '__main__':
                             ball.dy = ball.dy
                         
                         if objects[collision_index] == paddle:          # checks if paddle was hit
-                            randomnumber = (random.randrange(-5000, +5000)+ random.randrange(-5000, +5000)) * 0.0001    # create displacement according to gaussian distribution around 0, so its clean
+                            randomnumber = (random.randrange(-700, +700)+ random.randrange(-700, +700)) * 0.0001    # create displacement according to gaussian distribution around 0, so its clean
                             ball.dx += randomnumber                     # changes dx of ball by random number 
                             print(f"The Paddle was hit, dx has been changed by {randomnumber}")
 
