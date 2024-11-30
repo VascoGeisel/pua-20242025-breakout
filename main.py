@@ -93,6 +93,7 @@ if __name__ == '__main__':
         # TODO: Move into another class or at least funciton
         # TODO: normalize the ball movement Vector, so its not becomming infinitly fast
         # TODO: Make the Reflection not independent of the Speed of the Paddle
+        # TODO: IMPORTANT! If ball collides in corner and should collide with both wall and ceiling, 15 frames of immunity are to large
         # This code will be moved to another potion in the future but for now it will remain here for ease of development
         
         frames_since_collision += 1                                     # increment the collision counter, so there wont be any colisions right after each other
