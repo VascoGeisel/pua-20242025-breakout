@@ -103,6 +103,10 @@ class Ball(pygame.Rect):
     
     def setCollidables(self, collidables_list = None):
         """
+        Sets the List of Collidable Objects to the given List (there ist also an add funciton)
+
+        Parameters:
+            list: a list of wich objects the Collidables should be set to
         """
         if collidables_list == None:
             collidables_list = self.collidables
@@ -115,22 +119,79 @@ class Ball(pygame.Rect):
         self.allow_collisions = [1]*len(self.collidables)
         print(self.allow_collisions)
 
+    def addCollidables(self, collidables_list = None):
+        """
+        Not reliable yet
+        Adds to the list of collidable Objects the given list
 
-    def collide(self, paddle, screen):
+        Parameters:
+            list: a list of wich objects to add to the collidables 
+        """
+        if collidables_list == None:
+            return
+        
+        for i in collidables_list:
+            if i not in self.collidables:
+                self.collidables.append(i)
+
+        if self in collidables_list:
+            collidables_list.remove(self)
+            print(f"removed self list ist: {collidables_list}")
+        
+        self.collidables = collidables_list
+        self.allow_collisions = [1]*len(self.collidables)
+
+    def removeCollidables(self, to_remove):
+        """
+        not reliable yet
+        removes a given object (only one at a time) form the collidable objecs
+
+        Parameters:
+            object: object that sould be removed from the collidable objects
+        
+        Error:
+            ValueError: 
+                if the given object ist not in the collidable ist
+        """
+        if to_remove in self.collidables:
+            self.collidables.remove(to_remove)
+        else:
+            raise ValueError(f"{to_remove} is not in Collidables, cannot remove if not present")
+        
+        self.allow_collisions = [1]*len(self.collidables)
+
+
+
+
+    def collide(self, paddle, screen, debugging = False):
+        """
+        Collides the Ball with any other Obejct in the collidables list
+
+        Parameters: 
+            paddle : 
+                the Paddel to check for the possible movement of the Paddel
+
+            screen :
+                to display the edges the ball bounces off of
+
+            bool: 
+                set debugging = True to enable debugging Standard is False
+        
+        """
         ## Collision Detection / Reflection
         # TODO: normalize the ball movement Vector, so its not becomming infinitly fast - Not neccesary
-        # TODO: IMPORTANT! If ball collides in corner and should collide with both wall and ceiling, 15 frames of immunity are to large
         
             
         collision_index = self.collidelist(self.collidables) 
         
 
         if collision_index >= 0:                                    # chechs if Ball collides with any collidable objects
-            if self.allow_collisions[collision_index]:
+            if self.allow_collisions[collision_index]:              # checks if the Collision is a repetiotion
                 if type(self.collidables[collision_index]) != Ball:
                     self.frames_since_collision = 0                              # reset counter
                     for collidable_index in range(0, 4):                         # iterate over all the collidable objects
-                        pygame.draw.line(screen, (255, 0, 255), self.collidables[collision_index].get_edges()[collidable_index][0], self.collidables[collision_index].get_edges()[collidable_index][1], 3) # only for debugging, draws outlines ob colided objects
+                        if debugging:
+                            pygame.draw.line(screen, (255, 0, 255), self.collidables[collision_index].get_edges()[collidable_index][0], self.collidables[collision_index].get_edges()[collidable_index][1], 3) # only for debugging, draws outlines ob colided objects
                         if self.clipline(self.collidables[collision_index].get_edges()[collidable_index]):  # checks wich edge of collidable object ball collides with
                             print(f"clips with colidable_index: {collidable_index}")
                             if collidable_index == 0 or collidable_index == 3:                            # horizontal surfaces
@@ -146,7 +207,7 @@ class Ball(pygame.Rect):
                             if self.collidables[collision_index] == paddle:          # checks if paddle was hit
                                 randomnumber = (random.randrange(-700, +700)+ random.randrange(-700, +700)) * 0.0001    # create displacement according to gaussian distribution around 0, so its clean
                                 if paddle.mleft:
-                                    randomnumber = (random.randrange(-2000, 0)+ random.randrange(-2000, 0)) * 0.0001
+                                    randomnumber = (random.randrange(-2000, 0)+ random.randrange(-2000, 0)) * 0.0001    # create a displacement (gaussian) depending on movement of paddle
                                 elif paddle.mright:
                                     randomnumber = (random.randrange(0, +2000)+ random.randrange(0, +2000)) * 0.0001
 
@@ -158,10 +219,10 @@ class Ball(pygame.Rect):
                 else:
                     pass
 
-            self.allow_collisions[collision_index] = 0
-            print(self.allow_collisions)
+            self.allow_collisions[collision_index] = 0      # sets collision list to 0 to avoid repetioton
+            print(self.allow_collisions)                    
         
-        else:
+        else:                                               # resets repetiotion list
             for i in range(len(self.allow_collisions)):
                 self.allow_collisions[i] = 1
 
@@ -170,7 +231,9 @@ class Ball(pygame.Rect):
         Returns the four lines which define the edges of the Rectangle.
         The Order is: 
             1: Top Edge
-            2: Top Right Corner
+            2: Right Edge
+            3: Left Edge
+            4: Bottom Edge
 
         Returns:
         List: A list discribing 4 Lines (the edges of the Object) each made up of 2 lists discribing a point

@@ -16,9 +16,18 @@ from objects.wall import Wall
 from objects.brick import Brick
 
 # this code is from https://stackoverflow.com/questions/46698824/python-deep-copy-without-using-copy-module
-# it was copied on 1.12.24 at 14:21 and has been altered slightly to only allow for 1 Dimensional Lists
+# it was copied on 1.12.24 at 14:21 and has been altered to allow copy of any element in the list
 
 def mydeepcopy(L):
+    """
+    Returns a deep Copy of the Given list 
+
+    Parameters:
+        list : any kind fo list, no matter how many dimensions
+
+    Returns:
+        list : a deep copy of the given list 
+    """
     if isinstance(L, list):
         ret = []
         for i in L:
@@ -76,12 +85,12 @@ if __name__ == '__main__':
     paddle.mleft = False
     paddle.mright = False
 
+    # if any object is added to the scene it has to be added to this list
     objects = [paddle, ceiling, rightwall, leftwall, Brick1, ball2, ball]    # lists of objects, the ball can collide with 
     ball.setCollidables(mydeepcopy(objects))
     ball2.setCollidables(mydeepcopy(objects))
     
     while running:
-
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -118,8 +127,8 @@ if __name__ == '__main__':
         Brick1.draw(screen)
 
         # Collide the Ball with the given list of objects
-        ball.collide(paddle, screen)  
-        ball2.collide(paddle, screen)       
+        ball.collide(paddle, screen, debugging=True)  
+        ball2.collide(paddle, screen, debugging=True)       
 
         # move the paddle
         if paddle.mleft:
@@ -130,11 +139,10 @@ if __name__ == '__main__':
         # check if the ball has left the screen at the bottom, if yes, create a new one
         if ball.y > screen.get_height(): #note the top-left defined coordinate system :)
             print("The ball has left the screen")
-
+            
             #create a new ball at the top
-            ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=objects)
-            objects = [paddle, ceiling, rightwall, leftwall, Brick1, ball2, ball]
-            ball.setCollidables(mydeepcopy(objects))
+            ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=mydeepcopy(objects))
+
 
         #update
         pygame.time.wait(1) #slow things down by waiting 1 millisecond
