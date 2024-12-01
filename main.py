@@ -54,6 +54,9 @@ if __name__ == '__main__':
     paddle.mleft = False
     paddle.mright = False
 
+    objects = [paddle, ceiling, rightwall, leftwall]    # lists of objects, the ball can collide with 
+    ball.setCollidables(objects)
+    
     while running:
 
         
@@ -87,8 +90,7 @@ if __name__ == '__main__':
         paddle.draw(screen)
 
         # Collide the Ball with the given list of objects
-        objects = [paddle, ceiling, rightwall, leftwall]    # lists of objects, the ball can collide with 
-        ball.collide(paddle, collidables_list=objects)         
+        ball.collide(paddle)         
 
         # move the paddle
         if paddle.mleft:
@@ -101,7 +103,8 @@ if __name__ == '__main__':
             print("The ball has left the screen")
 
             #create a new ball at the top
-            ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red')
+            ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=objects)
+            ball.setCollidables(objects)
 
         #update
         pygame.time.wait(1) #slow things down by waiting 1 millisecond

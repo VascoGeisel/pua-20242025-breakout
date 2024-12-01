@@ -35,8 +35,6 @@ class Ball(pygame.Rect):
             collidables_list = []
 
         self.collidables = collidables_list
-        self.allow_collisions = [1]*len(self.collidables)
-        print(self.allow_collisions)
         self.radius = int(radius)
         self.speed = speed
         self.color = color
@@ -99,32 +97,30 @@ class Ball(pygame.Rect):
         """
         return "ball: x={}, y={}, dx={}, dy={}, speed={}".format(self.x, self.y, self.dx, self.dy, self.speed)
     
-    def setCollidables(self, collidables_list = None):
+    def collide(self, paddle, collidables_list = None, ):
         if collidables_list == None:
             collidables_list = self.collidables
 
         self.collidables = collidables_list
-        self.allow_collisions = [1]*len(self.collidables)
-        print(self.allow_collisions)
 
-
-    def collide(self, paddle):
-        ## Collision Detection / Reflection
+                ## Collision Detection / Reflection
         # TODO: normalize the ball movement Vector, so its not becomming infinitly fast - Not neccesary
         # TODO: IMPORTANT! If ball collides in corner and should collide with both wall and ceiling, 15 frames of immunity are to large
+        # This code will be moved to another potion in the future but for now it will remain here for ease of development
         
-            
-        collision_index = self.collidelist(self.collidables) 
-        
+        self.frames_since_collision += 1                                     # increment the collision counter, so there wont be any colisions right after each other
 
-        if collision_index >= 0:                                    # chechs if Ball collides with any collidable objects
-            if self.allow_collisions[collision_index]:
+        if self.frames_since_collision >= 15:                                # check for recent collision (15 is completly arbitrary, may change in the future)
+            
+                
+            collision_index = self.collidelist(self.collidables) 
+            if collision_index >= 0:                                    # chechs if Ball collides with any collidable objects
                 print(f"A collision was detected, the last colision was {self.frames_since_collision} ago") 
                 self.frames_since_collision = 0                              # reset counter
-                for collidable_index in range(0, 4):                         # iterate over all the collidable objects
+                for collidable_index in range(len(self.collidables)):                           # iterate over all the collidable objects
                     # pygame.draw.line(screen, (255, 0, 255), self.collidables[collision_index].get_edges()[collidable_index][0], objects[collision_index].get_edges()[collidable_index][1], 1) # only for debugging, draws outlines ob colided objects
                     if self.clipline(self.collidables[collision_index].get_edges()[collidable_index]):  # checks wich edge of collidable object ball collides with
-                        if collidable_index == 0 or collidable_index == 3:                            # horizontal surfaces
+                        if collidable_index == 0 or collidable_index == 4:                            # horizontal surfaces
                             # print(f"A Horziontal Surface was hit")
                             self.dx = self.dx
                             self.dy = -self.dy                  
@@ -145,12 +141,5 @@ class Ball(pygame.Rect):
                             print(f"The Paddle was hit, dx has been changed by {randomnumber}")
 
                         break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
-
-            self.allow_collisions[collision_index] = 0
-            print(self.allow_collisions)
+            
         
-        else:
-            for i in range(len(self.allow_collisions)):
-                self.allow_collisions[i] = 1
-
-    
