@@ -31,6 +31,7 @@ class Wall(pygame.Rect):
         height (int, optional): The height of the paddle. Default is 10.
         color (str, optional): The color of the paddle. Default is 'white'.
         """
+        self.color = color
         self._x = x
         self._y = y
         super().__init__(x, y, width, height)
@@ -53,7 +54,7 @@ class Wall(pygame.Rect):
         Returns:
         str: A string describing the paddle's current position (x, y) and speed.
         """
-        return "paddle: x={}, y={}".format(self.x, self.y)
+        return "Wall: x={}, y={}".format(self.x, self.y)
     
     def get_edges(self):
         """

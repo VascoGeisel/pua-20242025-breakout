@@ -13,6 +13,22 @@ import numpy as np
 from objects.ball import Ball
 from objects.paddle import Paddle
 from objects.wall import Wall
+from objects.brick import Brick
+
+# this code is from https://stackoverflow.com/questions/46698824/python-deep-copy-without-using-copy-module
+# it was copied on 1.12.24 at 14:21 and has been altered slightly to only allow for 1 Dimensional Lists
+
+def mydeepcopy(L):
+    if isinstance(L, list):
+        ret = []
+        for i in L:
+            ret.append(mydeepcopy(i))
+    else:
+        ret = L
+
+    return ret
+
+# end of copied code
 
 if __name__ == '__main__':
     # initialize pygame
@@ -39,6 +55,9 @@ if __name__ == '__main__':
     # initialize a ball
     ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red')
 
+    # initialize a second ball
+    ball2 = Ball(x = DISPLAY_WIDTH//2+50, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red')
+
     # initialize a paddle
     paddle_height = 10
     paddle_width = 50
@@ -48,14 +67,18 @@ if __name__ == '__main__':
     ceiling = Wall(0, 0, DISPLAY_WIDTH, -20)
     rightwall = Wall(DISPLAY_WIDTH, 0, 20, DISPLAY_HEIGHT)
     leftwall = Wall(0, 0, -20, DISPLAY_HEIGHT)
+
+    # Create a test Brick
+    Brick1 = Brick(400, 400, 50, 50)
     
 
     running = True
     paddle.mleft = False
     paddle.mright = False
 
-    objects = [paddle, ceiling, rightwall, leftwall]    # lists of objects, the ball can collide with 
-    ball.setCollidables(objects)
+    objects = [paddle, ceiling, rightwall, leftwall, Brick1, ball2, ball]    # lists of objects, the ball can collide with 
+    ball.setCollidables(mydeepcopy(objects))
+    ball2.setCollidables(mydeepcopy(objects))
     
     while running:
 
@@ -82,15 +105,21 @@ if __name__ == '__main__':
         screen.blit(Score, Score_position)
         # draw the ball
         ball.draw(screen)
-
+        ball2.draw(screen)
         # move the ball one step
         ball.move()
+
+        ball2.move()
 
         #draw the paddle
         paddle.draw(screen)
 
+        #draw the test Brick
+        Brick1.draw(screen)
+
         # Collide the Ball with the given list of objects
-        ball.collide(paddle)         
+        ball.collide(paddle, screen)  
+        ball2.collide(paddle, screen)       
 
         # move the paddle
         if paddle.mleft:
@@ -104,7 +133,8 @@ if __name__ == '__main__':
 
             #create a new ball at the top
             ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=objects)
-            ball.setCollidables(objects)
+            objects = [paddle, ceiling, rightwall, leftwall, Brick1, ball2, ball]
+            ball.setCollidables(mydeepcopy(objects))
 
         #update
         pygame.time.wait(1) #slow things down by waiting 1 millisecond

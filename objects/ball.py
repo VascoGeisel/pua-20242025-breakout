@@ -41,6 +41,8 @@ class Ball(pygame.Rect):
         self.speed = speed
         self.color = color
         self.diameter = int(self.radius * 2)
+        self.width = self.diameter
+        self.height = self.diameter
         self.x = int(x)
         self.y = int(y)
         self.dx = dx
@@ -100,15 +102,21 @@ class Ball(pygame.Rect):
         return "ball: x={}, y={}, dx={}, dy={}, speed={}".format(self.x, self.y, self.dx, self.dy, self.speed)
     
     def setCollidables(self, collidables_list = None):
+        """
+        """
         if collidables_list == None:
             collidables_list = self.collidables
+
+        if self in collidables_list:
+            collidables_list.remove(self)
+            print(f"removed self list ist: {collidables_list}")
 
         self.collidables = collidables_list
         self.allow_collisions = [1]*len(self.collidables)
         print(self.allow_collisions)
 
 
-    def collide(self, paddle):
+    def collide(self, paddle, screen):
         ## Collision Detection / Reflection
         # TODO: normalize the ball movement Vector, so its not becomming infinitly fast - Not neccesary
         # TODO: IMPORTANT! If ball collides in corner and should collide with both wall and ceiling, 15 frames of immunity are to large
@@ -119,32 +127,36 @@ class Ball(pygame.Rect):
 
         if collision_index >= 0:                                    # chechs if Ball collides with any collidable objects
             if self.allow_collisions[collision_index]:
-                print(f"A collision was detected, the last colision was {self.frames_since_collision} ago") 
-                self.frames_since_collision = 0                              # reset counter
-                for collidable_index in range(0, 4):                         # iterate over all the collidable objects
-                    # pygame.draw.line(screen, (255, 0, 255), self.collidables[collision_index].get_edges()[collidable_index][0], objects[collision_index].get_edges()[collidable_index][1], 1) # only for debugging, draws outlines ob colided objects
-                    if self.clipline(self.collidables[collision_index].get_edges()[collidable_index]):  # checks wich edge of collidable object ball collides with
-                        if collidable_index == 0 or collidable_index == 3:                            # horizontal surfaces
-                            # print(f"A Horziontal Surface was hit")
-                            self.dx = self.dx
-                            self.dy = -self.dy                  
+                if type(self.collidables[collision_index]) != Ball:
+                    self.frames_since_collision = 0                              # reset counter
+                    for collidable_index in range(0, 4):                         # iterate over all the collidable objects
+                        pygame.draw.line(screen, (255, 0, 255), self.collidables[collision_index].get_edges()[collidable_index][0], self.collidables[collision_index].get_edges()[collidable_index][1], 3) # only for debugging, draws outlines ob colided objects
+                        if self.clipline(self.collidables[collision_index].get_edges()[collidable_index]):  # checks wich edge of collidable object ball collides with
+                            print(f"clips with colidable_index: {collidable_index}")
+                            if collidable_index == 0 or collidable_index == 3:                            # horizontal surfaces
+                                # print(f"A Horziontal Surface was hit")
+                                self.dx = self.dx
+                                self.dy = -self.dy                  
 
-                        elif collidable_index == 1 or collidable_index == 2:                          # vertical surfaces
-                            # print(f"A vertical Surface was hit")      
-                            self.dx = -self.dx
-                            self.dy = self.dy
-                        
-                        if self.collidables[collision_index] == paddle:          # checks if paddle was hit
-                            randomnumber = (random.randrange(-700, +700)+ random.randrange(-700, +700)) * 0.0001    # create displacement according to gaussian distribution around 0, so its clean
-                            if paddle.mleft:
-                                randomnumber = (random.randrange(-2000, 0)+ random.randrange(-2000, 0)) * 0.0001
-                            elif paddle.mright:
-                                randomnumber = (random.randrange(0, +2000)+ random.randrange(0, +2000)) * 0.0001
+                            elif collidable_index == 1 or collidable_index == 2:                          # vertical surfaces
+                                # print(f"A vertical Surface was hit")      
+                                self.dx = -self.dx
+                                self.dy = self.dy
+                            
+                            if self.collidables[collision_index] == paddle:          # checks if paddle was hit
+                                randomnumber = (random.randrange(-700, +700)+ random.randrange(-700, +700)) * 0.0001    # create displacement according to gaussian distribution around 0, so its clean
+                                if paddle.mleft:
+                                    randomnumber = (random.randrange(-2000, 0)+ random.randrange(-2000, 0)) * 0.0001
+                                elif paddle.mright:
+                                    randomnumber = (random.randrange(0, +2000)+ random.randrange(0, +2000)) * 0.0001
 
-                            self.dx += randomnumber                     # changes dx of ball by random number 
-                            print(f"The Paddle was hit, dx has been changed by {randomnumber}")
+                                self.dx += randomnumber                     # changes dx of ball by random number 
+                                print(f"The Paddle was hit, dx has been changed by {randomnumber}")
 
-                        break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
+                            break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
+
+                else:
+                    pass
 
             self.allow_collisions[collision_index] = 0
             print(self.allow_collisions)
@@ -153,4 +165,22 @@ class Ball(pygame.Rect):
             for i in range(len(self.allow_collisions)):
                 self.allow_collisions[i] = 1
 
-    
+    def get_edges(self):
+        """
+        Returns the four lines which define the edges of the Rectangle.
+        The Order is: 
+            1: Top Edge
+            2: Top Right Corner
+
+        Returns:
+        List: A list discribing 4 Lines (the edges of the Object) each made up of 2 lists discribing a point
+        """
+        self.top_edge = [self.topleft, self.topright]
+        self.right_edge = [self.topright, self.bottomright]
+        self.left_edge = [self.topleft, self.bottomleft]
+        self.bottom_edge = [self.bottomleft, self.bottomright]
+
+        print(self.top_edge, self.right_edge, self.left_edge, self.bottom_edge)
+
+        return self.top_edge, self.right_edge, self.left_edge, self.bottom_edge
+        
