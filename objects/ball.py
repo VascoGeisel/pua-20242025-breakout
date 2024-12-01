@@ -17,7 +17,7 @@ class Ball(pygame.Rect):
     dy (float): The y-component of the direction vector (movement direction).
     """
 
-    def __init__(self, x, y, radius=15, dx=0, dy=1, speed=5, color='white'):
+    def __init__(self, x, y, radius=15, dx=0, dy=1, speed=5, color='white', collidables_list = None):
         """
         Initialize a new ball object with position, velocity, speed, and color.
 
@@ -30,7 +30,10 @@ class Ball(pygame.Rect):
         speed (int, optional): The speed at which the ball moves. Default is 5.
         color (str, optional): The color of the ball. Default is 'white'.
         """
-        
+        if collidables_list == None:
+            collidables_list = []
+
+        self.collidables = collidables_list
         self.radius = int(radius)
         self.speed = speed
         self.color = color
@@ -91,3 +94,10 @@ class Ball(pygame.Rect):
         str: A string describing the ball's current position (x, y), direction (dx, dy), and speed.
         """
         return "ball: x={}, y={}, dx={}, dy={}, speed={}".format(self.x, self.y, self.dx, self.dy, self.speed)
+    
+    def collide(self, paddle, collidables_list = None, ):
+        if collidables_list == None:
+            collidables_list = self.collidables
+
+        self.collidables = collidables_list
+

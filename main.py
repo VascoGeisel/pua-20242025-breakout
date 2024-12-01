@@ -51,8 +51,8 @@ if __name__ == '__main__':
     
 
     running = True
-    left = False
-    right = False
+    paddle.mleft = False
+    paddle.mright = False
 
     # create a counter for the collision detection System (may remove in future)
     frames_since_collision = 0
@@ -65,14 +65,14 @@ if __name__ == '__main__':
                 running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                left = True
+                paddle.mleft = True
             if event.key == pygame.K_RIGHT:
-                right = True
+                paddle.mright = True
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
-                left = False
+                paddle.mleft = False
             if event.key == pygame.K_RIGHT:
-                right = False
+                paddle.mright = False
 
         # always draw a black screen. then add objects as needed.
         screen.fill((0,0,0)) #0,0,0 is RGB color code for black
@@ -105,21 +105,26 @@ if __name__ == '__main__':
             if collision_index >= 0:                                    # chechs if Ball collides with any collidable objects
                 print(f"A collision was detected, the last colision was {frames_since_collision} ago") 
                 frames_since_collision = 0                              # reset counter
-                for i in range(len(objects)):                           # iterate over all the collidable objects
-                    pygame.draw.line(screen, (255, 0, 255), objects[collision_index].get_edges()[i][0], objects[collision_index].get_edges()[i][1], 1) # only for debugging, draws outlines ob colided objects
-                    if ball.clipline(objects[collision_index].get_edges()[i]):  # checks wich edge of collidable object ball collides with
-                        if i == 0 or i == 4:                            # horizontal surfaces
+                for collidable_index in range(len(objects)):                           # iterate over all the collidable objects
+                    pygame.draw.line(screen, (255, 0, 255), objects[collision_index].get_edges()[collidable_index][0], objects[collision_index].get_edges()[collidable_index][1], 1) # only for debugging, draws outlines ob colided objects
+                    if ball.clipline(objects[collision_index].get_edges()[collidable_index]):  # checks wich edge of collidable object ball collides with
+                        if collidable_index == 0 or collidable_index == 4:                            # horizontal surfaces
                             # print(f"A Horziontal Surface was hit")
                             ball.dx = ball.dx
                             ball.dy = -ball.dy                  
 
-                        elif i == 1 or i == 2:                          # vertical surfaces
+                        elif collidable_index == 1 or collidable_index == 2:                          # vertical surfaces
                             # print(f"A vertical Surface was hit")      
                             ball.dx = -ball.dx
                             ball.dy = ball.dy
                         
                         if objects[collision_index] == paddle:          # checks if paddle was hit
                             randomnumber = (random.randrange(-700, +700)+ random.randrange(-700, +700)) * 0.0001    # create displacement according to gaussian distribution around 0, so its clean
+                            if paddle.mleft:
+                                randomnumber = (random.randrange(-2000, 0)+ random.randrange(-2000, 0)) * 0.0001
+                            elif paddle.mright:
+                                randomnumber = (random.randrange(0, +2000)+ random.randrange(0, +2000)) * 0.0001
+
                             ball.dx += randomnumber                     # changes dx of ball by random number 
                             print(f"The Paddle was hit, dx has been changed by {randomnumber}")
 
@@ -128,9 +133,9 @@ if __name__ == '__main__':
         
 
         # move the paddle
-        if left:
+        if paddle.mleft:
             paddle.move_left()
-        elif right:
+        elif paddle.mright:
             paddle.move_right(screen)
 
         # check if the ball has left the screen at the bottom, if yes, create a new one

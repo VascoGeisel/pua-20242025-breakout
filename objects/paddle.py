@@ -33,6 +33,9 @@ class Paddle(pygame.Rect):
         self.speed = speed
         self.color = color
 
+        self.mleft = False
+        self.mright = False
+
     def draw(self, screen):
         """
         Draw the paddle on the provided screen at its current position.
