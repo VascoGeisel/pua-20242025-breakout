@@ -98,13 +98,13 @@ if __name__ == '__main__':
 
         #create Headline
         title_text = HEADLINE_FONT.render("Mainmenu", True, "red")
-        screen.blit(title_text, (DISPLAY_WIDTH // 2 - title_text.get_width() // 2, 100))
+        screen.blit(title_text, (DISPLAY_WIDTH // 2 - title_text.get_width() // 2, 60))
 
         #create start button with text
-        start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - 75, DISPLAY_HEIGHT // 2 - 25, 150, 50)
+        start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - 65, DISPLAY_HEIGHT // 2.5 - 25, 130, 50)
         pygame.draw.rect(screen, "red", start_button_position)
         start_button_text = HEADLINE_FONT.render("PLAY", True, "black")
-        screen.blit(start_button_text, (DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2 - start_button_text.get_height() // 2))
+        screen.blit(start_button_text, (DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2))
 
         #update
         pygame.display.flip()
