@@ -80,11 +80,39 @@ if __name__ == '__main__':
 
     # Create a test Brick
     Brick1 = Brick(400, 400, 50, 50)
+
+    # Create grid of Bricks
+    def create_bricks(position_x, position_y, amount_per_row, amount_per_column, distance, DISPLAY_WIDTH,  DISPLAY_HEIGHT):
+        """
+        Generates any amount of bricks in a grid described by the parameters
+
+        Parameters:
+        position_x: The x-coordinate of the top left corner of the top left brick of the grid
+        position_y: The y-coordinate of the top left corner of thetop left  brick of the grid
+        width: The width of every brick
+        height: The height of every brick
+        amount_per_row: The amount of bricks per row of the grid
+        amount_per_column: The amount of bricks per colum of the grid
+        distance: The distance between neighbouring bricks
+        """
+        list_of_bricks =[]
+        if position_x+(amount_per_row+distance-1)*amount_per_row <= DISPLAY_WIDTH and position_y+(amount_per_column+distance-1)*amount_per_column <= DISPLAY_HEIGHT:
+            for x_brick in range(0,amount_per_row,1):
+                for y_brick in range(0,amount_per_column,1):
+                    NewBrick = Brick(position_x*x_brick, position_y*y_brick)
+                    list_of_bricks.append(NewBrick)
+            return list_of_bricks        
+        else:
+            raise TypeError("The bricks don't fit on the display!")
     
     menu_running = True
     game_running = False
     paddle.mleft = False
     paddle.mright = False
+
+    # Create 40 Bricks for level 1
+
+
 
     # if any object is added to the scene it has to be added to this list
     objects = [paddle, ceiling, rightwall, leftwall, Brick1, ball2, ball]    # lists of objects, the ball can collide with 
@@ -125,6 +153,7 @@ if __name__ == '__main__':
                     menu_running = False
                     game_running = True
                     print("The menu was closed and the game was opened")
+                    print(create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 3, DISPLAY_WIDTH, DISPLAY_HEIGHT)) #generates bricks for first level, once start button is pressed
               
     
     while game_running:
@@ -161,7 +190,7 @@ if __name__ == '__main__':
         paddle.draw(screen)
 
         #draw the test Brick
-        Brick1.draw(screen)
+        #Brick1.draw(screen)
 
         # Collide the Ball with the given list of objects
         ball.collide(paddle, screen, debugging=True)  
