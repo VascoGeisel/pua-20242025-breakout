@@ -54,7 +54,8 @@ if __name__ == '__main__':
 
     # create fonts
     SCORE_FONT = pygame.font.Font(None, 30)
-
+    HEADLINE_FONT = pygame.font.Font(None, 64)
+    
     #Text creation
     Score = SCORE_FONT.render("Hello KITty", True, "green")
 
@@ -80,8 +81,8 @@ if __name__ == '__main__':
     # Create a test Brick
     Brick1 = Brick(400, 400, 50, 50)
     
-
-    running = True
+    menu_running = True
+    game_running = False
     paddle.mleft = False
     paddle.mright = False
 
@@ -90,11 +91,42 @@ if __name__ == '__main__':
     ball.setCollidables(mydeepcopy(objects))
     ball2.setCollidables(mydeepcopy(objects))
     
-    while running:
+    while menu_running:
+
+        # always draw a black screen. then add objects as needed.
+        screen.fill((0,0,0)) #0,0,0 is RGB color code for black
+
+        #create Headline
+        title_text = HEADLINE_FONT.render("Mainmenu", True, "red")
+        screen.blit(title_text, (DISPLAY_WIDTH // 2 - title_text.get_width() // 2, 100))
+
+        #create start button with text
+        start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - 75, DISPLAY_HEIGHT // 2 - 25, 150, 50)
+        pygame.draw.rect(screen, "red", start_button_position)
+        start_button_text = HEADLINE_FONT.render("PLAY", True, "black")
+        screen.blit(start_button_text, (DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2 - start_button_text.get_height() // 2))
+
+        #update
+        pygame.display.flip()
+
+        #when button is clicked, menu is getting closed and the game opens
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                menu_running = False
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if start_button_position.collidepoint(event.pos):
+                    menu_running = False
+                    game_running = True
+                    print("The menu was closed and the game was opened")
+              
+    
+    while game_running:
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                game_running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 paddle.mleft = True
