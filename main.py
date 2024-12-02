@@ -55,6 +55,7 @@ if __name__ == '__main__':
     # create fonts
     SCORE_FONT = pygame.font.Font(None, 30)
     HEADLINE_FONT = pygame.font.Font(None, 64)
+    SMALL_FONT = pygame.font.Font(None, 32)
     
     #Text creation
     Score = SCORE_FONT.render("Hello KITty", True, "green")
@@ -106,6 +107,7 @@ if __name__ == '__main__':
             raise TypeError("The bricks don't fit on the display!")
     
     menu_running = True
+    highscore_running = False
     game_running = False
     paddle.mleft = False
     paddle.mright = False
@@ -121,40 +123,74 @@ if __name__ == '__main__':
     
     while menu_running:
 
-        # always draw a black screen. then add objects as needed.
+        #always draw a black screen. then add objects as needed.
         screen.fill((0,0,0)) #0,0,0 is RGB color code for black
 
         #create Headline
         title_text = HEADLINE_FONT.render("Mainmenu", True, "red")
         screen.blit(title_text, (DISPLAY_WIDTH // 2 - title_text.get_width() // 2, 60))
 
-        #create start button with text
+        #create play button
         start_button_text = HEADLINE_FONT.render("PLAY", True, "black")
-        start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - (start_button_text.get_width() + 10) // 2, DISPLAY_HEIGHT // 2.5 - (start_button_text.get_height() + 10) // 2, start_button_text.get_width() + 10, start_button_text.get_height() + 10)
+        start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2, start_button_text.get_width(), start_button_text.get_height())
         pygame.draw.rect(screen, "red", start_button_position)
         screen.blit(start_button_text, (DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2))
 
+        #create highscore button
         highscore_button_text = HEADLINE_FONT.render("HIGHSCORE", True, "black")
-        highscore_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - (highscore_button_text.get_width() + 10) // 2, DISPLAY_HEIGHT // 1.4 - (highscore_button_text.get_height() + 10) // 2 , highscore_button_text.get_width() + 10, highscore_button_text.get_height() + 10)
+        highscore_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - highscore_button_text.get_width() // 2, DISPLAY_HEIGHT // 1.4 - highscore_button_text.get_height() // 2 , highscore_button_text.get_width(), highscore_button_text.get_height())
         pygame.draw.rect(screen, "red", highscore_button_position)
         screen.blit(highscore_button_text, (DISPLAY_WIDTH // 2 - highscore_button_text.get_width() // 2, DISPLAY_HEIGHT // 1.4 - highscore_button_text.get_height() // 2))
 
         #update
         pygame.display.flip()
 
-        #when button is clicked, menu is getting closed and the game opens
+        #looking for events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 menu_running = False
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if start_button_position.collidepoint(event.pos):
+                if start_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the game opens
                     menu_running = False
                     game_running = True
                     print("The menu was closed and the game was opened")
+                if highscore_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the highscore opens
+                    menu_running = False
+                    highscore_running = True
+                    print("The menu was closed and the highscore was opened")
+
+
+    while highscore_running:
+
+        #always draw a black screen. then add objects as needed.
+        screen.fill((0,0,0)) #0,0,0 is RGB color code for black
+
+        #create return to menu button
+        return_to_menu_button_text = SMALL_FONT.render("RETURN TO MENU", True, "black")
+        return_to_menu_button_position = pygame.Rect(DISPLAY_WIDTH - return_to_menu_button_text.get_width(), DISPLAY_HEIGHT - return_to_menu_button_text.get_height(), return_to_menu_button_text.get_width(), return_to_menu_button_text.get_height())
+        pygame.draw.rect(screen, "red", return_to_menu_button_position)
+        screen.blit(return_to_menu_button_text, (DISPLAY_WIDTH - return_to_menu_button_text.get_width(), DISPLAY_HEIGHT - return_to_menu_button_text.get_height()))
+        
+        #update
+        pygame.display.flip()
+
+        #looking for events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                menu_running = False
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if return_to_menu_button_position.collidepoint(event.pos): #when button is clicked, highscore is getting closed and the menu opens
+                    highscore_running = False
+                    menu_running = True
+                    print("The highscore was closed and the menu was opened")
+
+
                     print(create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 3, DISPLAY_WIDTH, DISPLAY_HEIGHT)) #generates bricks for first level, once start button is pressed
-              
+     
     
     while game_running:
         
