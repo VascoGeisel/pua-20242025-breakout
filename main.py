@@ -101,10 +101,15 @@ if __name__ == '__main__':
         screen.blit(title_text, (DISPLAY_WIDTH // 2 - title_text.get_width() // 2, 60))
 
         #create start button with text
-        start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - 65, DISPLAY_HEIGHT // 2.5 - 25, 130, 50)
-        pygame.draw.rect(screen, "red", start_button_position)
         start_button_text = HEADLINE_FONT.render("PLAY", True, "black")
+        start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - (start_button_text.get_width() + 10) // 2, DISPLAY_HEIGHT // 2.5 - (start_button_text.get_height() + 10) // 2, start_button_text.get_width() + 10, start_button_text.get_height() + 10)
+        pygame.draw.rect(screen, "red", start_button_position)
         screen.blit(start_button_text, (DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2))
+
+        highscore_button_text = HEADLINE_FONT.render("HIGHSCORE", True, "black")
+        highscore_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - (highscore_button_text.get_width() + 10) // 2, DISPLAY_HEIGHT // 1.4 - (highscore_button_text.get_height() + 10) // 2 , highscore_button_text.get_width() + 10, highscore_button_text.get_height() + 10)
+        pygame.draw.rect(screen, "red", highscore_button_position)
+        screen.blit(highscore_button_text, (DISPLAY_WIDTH // 2 - highscore_button_text.get_width() // 2, DISPLAY_HEIGHT // 1.4 - highscore_button_text.get_height() // 2))
 
         #update
         pygame.display.flip()
