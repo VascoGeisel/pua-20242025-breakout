@@ -201,17 +201,17 @@ if __name__ == '__main__':
                 if event.type == pygame.QUIT:
                     running = False
                     game_running = False
-            if event.type == pygame.KEYDOWN:
-                print(event.key)
-                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                    paddle.mleft = True
-                if event.key == pygame.K_RIGHT:
-                    paddle.mright = True
-            elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    paddle.mleft = False
-                if event.key == pygame.K_RIGHT:
-                    paddle.mright = False
+                if event.type == pygame.KEYDOWN:
+                    print(event.key)
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                        paddle.mleft = True
+                    if event.key == pygame.K_RIGHT  or event.key == pygame.K_d:
+                        paddle.mright = True
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                        paddle.mleft = False
+                    if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                        paddle.mright = False
 
             # always draw a black screen. then add objects as needed.
             screen.fill((0,0,0)) #0,0,0 is RGB color code for black
