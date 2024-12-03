@@ -83,7 +83,7 @@ if __name__ == '__main__':
     Brick1 = Brick(400, 400, 50, 50)
 
     # Create grid of Bricks
-    def create_bricks(position_x, position_y, amount_per_row, amount_per_column, percent_height, distance, DISPLAY_WIDTH,  DISPLAY_HEIGHT):
+    def create_bricks(position_x=10, position_y=DISPLAY_HEIGHT/7, amount_per_row=10, amount_per_column=5, percent_height=0.2, distance=5, DISPLAY_WIDTH = DISPLAY_WIDTH,  DISPLAY_HEIGHT = DISPLAY_HEIGHT):
         """
         Generates any amount of bricks in a grid described by the parameters
 
@@ -159,7 +159,7 @@ if __name__ == '__main__':
                         menu_running = False
                         game_running = True
                         print("The menu was closed and the game was opened")
-                        brick_grid = create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 1/5, 5, DISPLAY_WIDTH, DISPLAY_HEIGHT) #generates list which represents brick grid
+                        brick_grid = create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 0.2, 5, DISPLAY_WIDTH, DISPLAY_HEIGHT) #generates list which represents brick grid
                         print(brick_grid)
                     if highscore_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the highscore opens
                         menu_running = False
