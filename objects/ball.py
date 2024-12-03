@@ -217,6 +217,7 @@ class Ball(pygame.Rect):
                             break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
 
                 else:
+                    print("Collision with ball")
                     pass
 
             self.allow_collisions[collision_index] = 0      # sets collision list to 0 to avoid repetioton
