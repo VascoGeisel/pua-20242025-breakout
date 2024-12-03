@@ -16,7 +16,7 @@ class Brick(Wall):
     A Class to represent the Bricks that sould be destroyed by the Player
     Tihs ist WIP so there are no funcitons so far
     """
-    def __init__(self, x, y, width=50, height=10, lives = 1, colours_by_live = None):
+    def __init__(self, x, y, width=2, height=5, lives = 1, colours_by_live = None):
         """
         Initialize a new Brick object with position, size and color.
 

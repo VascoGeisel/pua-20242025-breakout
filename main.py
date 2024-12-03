@@ -83,7 +83,7 @@ if __name__ == '__main__':
     Brick1 = Brick(400, 400, 50, 50)
 
     # Create grid of Bricks
-    def create_bricks(position_x, position_y, amount_per_row, amount_per_column, distance, DISPLAY_WIDTH,  DISPLAY_HEIGHT):
+    def create_bricks(position_x, position_y, amount_per_row, amount_per_column, percent_height, distance, DISPLAY_WIDTH,  DISPLAY_HEIGHT):
         """
         Generates any amount of bricks in a grid described by the parameters
 
@@ -95,12 +95,16 @@ if __name__ == '__main__':
         amount_per_row: The amount of bricks per row of the grid
         amount_per_column: The amount of bricks per colum of the grid
         distance: The distance between neighbouring bricks
+
+        Returns: list_of_bricks: Each brick including the position of its top left corner, width and height is returned as an element in this list
         """
         list_of_bricks =[]
+        space_x_direction = DISPLAY_WIDTH - 2*position_x
+        space_y_direction = DISPLAY_HEIGHT*percent_height
         if position_x+(amount_per_row+distance-1)*amount_per_row <= DISPLAY_WIDTH and position_y+(amount_per_column+distance-1)*amount_per_column <= DISPLAY_HEIGHT:
             for x_brick in range(0,amount_per_row,1):
                 for y_brick in range(0,amount_per_column,1):
-                    NewBrick = Brick(position_x*x_brick, position_y*y_brick)
+                    NewBrick = Brick(position_x+x_brick*(space_x_direction/(amount_per_row)), position_y+y_brick*(space_y_direction/(amount_per_column)), (space_x_direction-((amount_per_row-1)*distance))/(amount_per_row), (space_y_direction-(amount_per_column-1)*distance)/amount_per_column)
                     list_of_bricks.append(NewBrick)
             return list_of_bricks        
         else:
@@ -112,10 +116,7 @@ if __name__ == '__main__':
     paddle.mleft = False
     paddle.mright = False
 
-    # Create 40 Bricks for level 1
-
-
-
+    
     # if any object is added to the scene it has to be added to this list
     objects = [paddle, ceiling, rightwall, leftwall, Brick1, ball2, ball]    # lists of objects, the ball can collide with 
     ball.setCollidables(mydeepcopy(objects))
@@ -158,6 +159,8 @@ if __name__ == '__main__':
                         menu_running = False
                         game_running = True
                         print("The menu was closed and the game was opened")
+                        brick_grid = create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 1/5, 5, DISPLAY_WIDTH, DISPLAY_HEIGHT) #generates list which represents brick grid
+                        print(brick_grid)
                     if highscore_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the highscore opens
                         menu_running = False
                         highscore_running = True
@@ -191,8 +194,7 @@ if __name__ == '__main__':
                         menu_running = True
                         print("The highscore was closed and the menu was opened")
 
-
-                        print(create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 3, DISPLAY_WIDTH, DISPLAY_HEIGHT)) #generates bricks for first level, once start button is pressed
+                        
         
         
         while game_running:
@@ -214,6 +216,10 @@ if __name__ == '__main__':
 
             # always draw a black screen. then add objects as needed.
             screen.fill((0,0,0)) #0,0,0 is RGB color code for black
+
+            # Draw the grid of bricks
+            for brick in range(0, len(brick_grid), 1):
+                brick_grid[brick].draw(screen)
 
             #show score
             Score_position = Score.get_rect(center=(100,200))
