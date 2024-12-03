@@ -16,7 +16,7 @@ class Brick(Wall):
     A Class to represent the Bricks that sould be destroyed by the Player
     Tihs ist WIP so there are no funcitons so far
     """
-    def __init__(self, x, y, width=50, height=10):
+    def __init__(self, x, y, width=50, height=10, lives = 1, colours_by_live = None):
         """
         Initialize a new Brick object with position, size and color.
 
@@ -27,7 +27,22 @@ class Brick(Wall):
         height (int, optional): The height of the paddle. Default is 10.
         color (str, optional): The color of the paddle. Default is 'white'.
         """
+        if colours_by_live == None:
+            colours_by_live = [(255,255,255)]*lives
+        
+        self.colours_by_live = colours_by_live
+        self.color = self.colours_by_live[0]
+        self.lives = lives
         self._x = x
         self._y = y
         super().__init__(x, y, width, height)
+    
+    def was_hit(self, damage):
+        self.lives -= damage
+    
+    def is_alive(self):
+        if self.lives > 0:
+            return True
+    
+
     

@@ -120,136 +120,141 @@ if __name__ == '__main__':
     objects = [paddle, ceiling, rightwall, leftwall, Brick1, ball2, ball]    # lists of objects, the ball can collide with 
     ball.setCollidables(mydeepcopy(objects))
     ball2.setCollidables(mydeepcopy(objects))
-    
-    while menu_running:
+    running = True
+    while running:
+        while menu_running:
 
-        #always draw a black screen. then add objects as needed.
-        screen.fill((0,0,0)) #0,0,0 is RGB color code for black
+            #always draw a black screen. then add objects as needed.
+            screen.fill((0,0,0)) #0,0,0 is RGB color code for black
 
-        #create Headline
-        title_text = HEADLINE_FONT.render("Mainmenu", True, "red")
-        screen.blit(title_text, (DISPLAY_WIDTH // 2 - title_text.get_width() // 2, 60))
+            #create Headline
+            title_text = HEADLINE_FONT.render("Mainmenu", True, "red")
+            screen.blit(title_text, (DISPLAY_WIDTH // 2 - title_text.get_width() // 2, 60))
 
-        #create play button
-        start_button_text = HEADLINE_FONT.render("PLAY", True, "black")
-        start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2, start_button_text.get_width(), start_button_text.get_height())
-        pygame.draw.rect(screen, "red", start_button_position)
-        screen.blit(start_button_text, (DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2))
+            #create play button
+            start_button_text = HEADLINE_FONT.render("PLAY", True, "black")
+            start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2, start_button_text.get_width(), start_button_text.get_height())
+            pygame.draw.rect(screen, "red", start_button_position)
+            screen.blit(start_button_text, (DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2))
 
-        #create highscore button
-        highscore_button_text = HEADLINE_FONT.render("HIGHSCORE", True, "black")
-        highscore_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - highscore_button_text.get_width() // 2, DISPLAY_HEIGHT // 1.4 - highscore_button_text.get_height() // 2 , highscore_button_text.get_width(), highscore_button_text.get_height())
-        pygame.draw.rect(screen, "red", highscore_button_position)
-        screen.blit(highscore_button_text, (DISPLAY_WIDTH // 2 - highscore_button_text.get_width() // 2, DISPLAY_HEIGHT // 1.4 - highscore_button_text.get_height() // 2))
+            #create highscore button
+            highscore_button_text = HEADLINE_FONT.render("HIGHSCORE", True, "black")
+            highscore_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - highscore_button_text.get_width() // 2, DISPLAY_HEIGHT // 1.4 - highscore_button_text.get_height() // 2 , highscore_button_text.get_width(), highscore_button_text.get_height())
+            pygame.draw.rect(screen, "red", highscore_button_position)
+            screen.blit(highscore_button_text, (DISPLAY_WIDTH // 2 - highscore_button_text.get_width() // 2, DISPLAY_HEIGHT // 1.4 - highscore_button_text.get_height() // 2))
 
-        #update
-        pygame.display.flip()
+            #update
+            pygame.display.flip()
 
-        #looking for events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                menu_running = False
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if start_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the game opens
+            #looking for events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     menu_running = False
-                    game_running = True
-                    print("The menu was closed and the game was opened")
-                if highscore_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the highscore opens
-                    menu_running = False
-                    highscore_running = True
-                    print("The menu was closed and the highscore was opened")
+                    running = False
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if start_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the game opens
+                        menu_running = False
+                        game_running = True
+                        print("The menu was closed and the game was opened")
+                    if highscore_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the highscore opens
+                        menu_running = False
+                        highscore_running = True
+                        print("The menu was closed and the highscore was opened")
 
 
-    while highscore_running:
+        while highscore_running:
 
-        #always draw a black screen. then add objects as needed.
-        screen.fill((0,0,0)) #0,0,0 is RGB color code for black
+            #always draw a black screen. then add objects as needed.
+            screen.fill((0,0,0)) #0,0,0 is RGB color code for black
 
-        #create return to menu button
-        return_to_menu_button_text = SMALL_FONT.render("RETURN TO MENU", True, "black")
-        return_to_menu_button_position = pygame.Rect(DISPLAY_WIDTH - return_to_menu_button_text.get_width(), DISPLAY_HEIGHT - return_to_menu_button_text.get_height(), return_to_menu_button_text.get_width(), return_to_menu_button_text.get_height())
-        pygame.draw.rect(screen, "red", return_to_menu_button_position)
-        screen.blit(return_to_menu_button_text, (DISPLAY_WIDTH - return_to_menu_button_text.get_width(), DISPLAY_HEIGHT - return_to_menu_button_text.get_height()))
-        
-        #update
-        pygame.display.flip()
-
-        #looking for events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                menu_running = False
-                pygame.quit()
-                sys.exit()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if return_to_menu_button_position.collidepoint(event.pos): #when button is clicked, highscore is getting closed and the menu opens
-                    highscore_running = False
-                    menu_running = True
-                    print("The highscore was closed and the menu was opened")
-
-
-                    print(create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 3, DISPLAY_WIDTH, DISPLAY_HEIGHT)) #generates bricks for first level, once start button is pressed
-     
-    
-    while game_running:
-        
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                paddle.mleft = True
-            if event.key == pygame.K_RIGHT:
-                paddle.mright = True
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_LEFT:
-                paddle.mleft = False
-            if event.key == pygame.K_RIGHT:
-                paddle.mright = False
-
-        # always draw a black screen. then add objects as needed.
-        screen.fill((0,0,0)) #0,0,0 is RGB color code for black
-
-        #show score
-        Score_position = Score.get_rect(center=(100,200))
-        screen.blit(Score, Score_position)
-        # draw the ball
-        ball.draw(screen)
-        ball2.draw(screen)
-        # move the ball one step
-        ball.move()
-
-        ball2.move()
-
-        #draw the paddle
-        paddle.draw(screen)
-
-        #draw the test Brick
-        #Brick1.draw(screen)
-
-        # Collide the Ball with the given list of objects
-        ball.collide(paddle, screen, debugging=True)  
-        ball2.collide(paddle, screen, debugging=True)       
-
-        # move the paddle
-        if paddle.mleft:
-            paddle.move_left()
-        elif paddle.mright:
-            paddle.move_right(screen)
-
-        # check if the ball has left the screen at the bottom, if yes, create a new one
-        if ball.y > screen.get_height(): #note the top-left defined coordinate system :)
-            print("The ball has left the screen")
+            #create return to menu button
+            return_to_menu_button_text = SMALL_FONT.render("RETURN TO MENU", True, "black")
+            return_to_menu_button_position = pygame.Rect(DISPLAY_WIDTH - return_to_menu_button_text.get_width(), DISPLAY_HEIGHT - return_to_menu_button_text.get_height(), return_to_menu_button_text.get_width(), return_to_menu_button_text.get_height())
+            pygame.draw.rect(screen, "red", return_to_menu_button_position)
+            screen.blit(return_to_menu_button_text, (DISPLAY_WIDTH - return_to_menu_button_text.get_width(), DISPLAY_HEIGHT - return_to_menu_button_text.get_height()))
             
-            #create a new ball at the top
-            ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=mydeepcopy(objects))
+            #update
+            pygame.display.flip()
+
+            #looking for events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    menu_running = False
+                    running = False
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if return_to_menu_button_position.collidepoint(event.pos): #when button is clicked, highscore is getting closed and the menu opens
+                        highscore_running = False
+                        menu_running = True
+                        print("The highscore was closed and the menu was opened")
 
 
-        #update
-        pygame.time.wait(1) #slow things down by waiting 1 millisecond
-        pygame.display.update()
-        clock.tick(FPS)
+                        print(create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 3, DISPLAY_WIDTH, DISPLAY_HEIGHT)) #generates bricks for first level, once start button is pressed
+        
+        
+        while game_running:
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                    game_running = False
+            if event.type == pygame.KEYDOWN:
+                print(event.key)
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                    paddle.mleft = True
+                if event.key == pygame.K_RIGHT:
+                    paddle.mright = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    paddle.mleft = False
+                if event.key == pygame.K_RIGHT:
+                    paddle.mright = False
+
+            # always draw a black screen. then add objects as needed.
+            screen.fill((0,0,0)) #0,0,0 is RGB color code for black
+
+            #show score
+            Score_position = Score.get_rect(center=(100,200))
+            screen.blit(Score, Score_position)
+            # draw the ball
+            ball.draw(screen)
+            ball2.draw(screen)
+            # move the ball one step
+            ball.move()
+
+            ball2.move()
+
+            #draw the paddle
+            paddle.draw(screen)
+
+            #draw the test Brick
+            #Brick1.draw(screen)
+
+            # Collide the Ball with the given list of objects
+            ball.collide(paddle, screen, debugging=True)  
+            ball2.collide(paddle, screen, debugging=True)       
+
+            # move the paddle
+            if paddle.mleft:
+                paddle.move_left()
+            elif paddle.mright:
+                paddle.move_right(screen)
+
+            # check if the ball has left the screen at the bottom, if yes, create a new one
+            if ball.y > screen.get_height(): #note the top-left defined coordinate system :)
+                print("The ball has left the screen")
+                
+                #create a new ball at the top
+                ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=mydeepcopy(objects))
+
+
+            #update
+            pygame.time.wait(1) #slow things down by waiting 1 millisecond
+            pygame.display.update()
+            clock.tick(FPS)
 
     pygame.quit() # Call the quit() method outside the while loop to end the application.
 
