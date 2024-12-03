@@ -202,7 +202,6 @@ if __name__ == '__main__':
                     running = False
                     game_running = False
                 if event.type == pygame.KEYDOWN:
-                    print(event.key)
                     if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         paddle.mleft = True
                     if event.key == pygame.K_RIGHT  or event.key == pygame.K_d:
