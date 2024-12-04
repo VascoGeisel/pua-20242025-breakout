@@ -67,7 +67,7 @@ if __name__ == '__main__':
     ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red')
 
     # initialize a second ball
-    ball2 = Ball(x = DISPLAY_WIDTH//2+50, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red')
+    ball2 = Ball(x = DISPLAY_WIDTH//2, y = 300, dx = 0, dy = -1, radius = 10, speed = 5, color='red')
 
     # initialize a paddle
     paddle_height = 10
@@ -247,8 +247,11 @@ if __name__ == '__main__':
                 print("The ball has left the screen")
                 
                 #create a new ball at the top
+                objects.remove(ball)
+                del ball
                 ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=mydeepcopy(objects))
-
+                objects.append(ball)
+                ball2.setCollidables(mydeepcopy(objects))
 
             #update
             pygame.time.wait(1) #slow things down by waiting 1 millisecond
