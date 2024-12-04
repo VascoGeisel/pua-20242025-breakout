@@ -47,6 +47,8 @@ class Ball(pygame.Rect):
         self.y = int(y)
         self.dx = dx
         self.dy = dy
+        self.dx_old = dx
+        self.dy_old = dy
         self.frames_since_collision = 0
         
         # rectangles in pygame are defined by the top-left corner and dimensions
@@ -85,6 +87,9 @@ class Ball(pygame.Rect):
         num = math.sqrt(self.dx * self.dx + self.dy * self.dy)
         self.dx = self.dx / num
         self.dy = self.dy / num
+
+        self.dy_old = self.dy
+        self.dx_old = self.dx
         
         step_x = self.speed * self.dx
         step_y = self.speed * self.dy
@@ -197,12 +202,18 @@ class Ball(pygame.Rect):
                             if collidable_index == 0 or collidable_index == 3:                            # horizontal surfaces
                                 # print(f"A Horziontal Surface was hit")
                                 self.dx = self.dx
-                                self.dy = -self.dy                  
+                                self.dy = -self.dy       
+
+                                self.dy_old = self.dy
+                                self.dx_old = self.dx           
 
                             elif collidable_index == 1 or collidable_index == 2:                          # vertical surfaces
                                 # print(f"A vertical Surface was hit")      
                                 self.dx = -self.dx
                                 self.dy = self.dy
+
+                                self.dy_old = self.dy
+                                self.dx_old = self.dx
                             
                             if self.collidables[collision_index] == paddle:          # checks if paddle was hit
                                 randomnumber = (random.randrange(-700, +700)+ random.randrange(-700, +700)) * 0.0001    # create displacement according to gaussian distribution around 0, so its clean
@@ -211,14 +222,23 @@ class Ball(pygame.Rect):
                                 elif paddle.mright:
                                     randomnumber = (random.randrange(0, +2000)+ random.randrange(0, +2000)) * 0.0001
 
-                                self.dx += randomnumber                     # changes dx of ball by random number 
+                                self.dx += randomnumber
+                                self.dx_old = self.dx                     # changes dx of ball by random number 
                                 print(f"The Paddle was hit, dx has been changed by {randomnumber}")
 
                             break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
 
                 else:
                     print("Collision with ball")
+                    self.dx_old = self.dx
+                    self.dy_old = self.dy
+                    self.dx = self.collidables[collision_index].dx_old
+                    self.dy = self.collidables[collision_index].dy_old
                     pass
+            else:
+                for i in range(len(self.allow_collisions)):
+                    if i != collision_index:
+                        self.allow_collisions[i] = 1
 
             self.allow_collisions[collision_index] = 0      # sets collision list to 0 to avoid repetioton
             print(self.allow_collisions)                    
