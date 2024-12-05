@@ -37,7 +37,7 @@ class Ball(pygame.Rect):
 
         self.collidables = collidables_list
         self.allow_collisions = [1]*len(self.collidables)
-        print(self.allow_collisions)
+        # print(self.allow_collisions)
         self.radius = int(radius)
         self.speed = speed
         self.color = color
@@ -119,11 +119,11 @@ class Ball(pygame.Rect):
 
         if self in collidables_list:
             collidables_list.remove(self)
-            print(f"removed self list ist: {collidables_list}")
+            # print(f"removed self list ist: {collidables_list}")
 
         self.collidables = collidables_list
         self.allow_collisions = [1]*len(self.collidables)
-        print(self.allow_collisions)
+        # print(self.allow_collisions)
 
     def addCollidables(self, collidables_list = None):
         """
@@ -142,7 +142,7 @@ class Ball(pygame.Rect):
 
         if self in collidables_list:
             collidables_list.remove(self)
-            print(f"removed self list ist: {collidables_list}")
+            # print(f"removed self list ist: {collidables_list}")
         
         self.collidables = collidables_list
         self.allow_collisions = [1]*len(self.collidables)
@@ -199,7 +199,7 @@ class Ball(pygame.Rect):
                         if debugging:
                             pygame.draw.line(screen, (255, 0, 255), self.collidables[collision_index].get_edges()[collidable_index][0], self.collidables[collision_index].get_edges()[collidable_index][1], 8) # only for debugging, draws outlines ob colided objects
                         if self.clipline(self.collidables[collision_index].get_edges()[collidable_index]):  # checks wich edge of collidable object ball collides with
-                            print(f"clips with colidable_index: {collidable_index}")
+                            # print(f"clips with colidable_index: {collidable_index}")
                             if collidable_index == 0 or collidable_index == 3:                            # horizontal surfaces
                                 # print(f"A Horziontal Surface was hit")
                                 self.dx = self.dx
@@ -210,7 +210,6 @@ class Ball(pygame.Rect):
 
                             elif collidable_index == 1 or collidable_index == 2:                          # vertical surfaces
                                 # print(f"A vertical Surface was hit")     
-                                print(type(self.collidables[collision_index]))
                                 self.dx = -self.dx
                                 self.dy = self.dy
 
@@ -243,7 +242,7 @@ class Ball(pygame.Rect):
                         self.allow_collisions[i] = 1
 
             self.allow_collisions[collision_index] = 0      # sets collision list to 0 to avoid repetioton
-            print(self.allow_collisions)                    
+            # print(self.allow_collisions)                    
         
         else:                                               # resets repetiotion list
             for i in range(len(self.allow_collisions)):
@@ -265,8 +264,6 @@ class Ball(pygame.Rect):
         self.right_edge = [self.topright, self.bottomright]
         self.left_edge = [self.topleft, self.bottomleft]
         self.bottom_edge = [self.bottomleft, self.bottomright]
-
-        print(self.top_edge, self.right_edge, self.left_edge, self.bottom_edge)
 
         return self.top_edge, self.right_edge, self.left_edge, self.bottom_edge
         

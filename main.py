@@ -82,6 +82,8 @@ if __name__ == '__main__':
     Brick1 = Brick(400, 400, 50, 50)
     old_objects = []
 
+    lives = 3
+
     # Create grid of Bricks
     def create_bricks(position_x=10, position_y=DISPLAY_HEIGHT/7, amount_per_row=10, amount_per_column=5, percent_height=0.2, distance=5, DISPLAY_WIDTH = DISPLAY_WIDTH,  DISPLAY_HEIGHT = DISPLAY_HEIGHT):
         """
@@ -163,7 +165,7 @@ if __name__ == '__main__':
                         for ball in balls:
                             ball.setCollidables(mydeepcopy(objects))
 
-                        print(brick_grid)
+                        # print(brick_grid)
                     if highscore_button.is_clicked(event.pos): #when button is clicked, menu is getting closed and the highscore opens
                         menu_running = False
                         highscore_running = True
@@ -268,17 +270,31 @@ if __name__ == '__main__':
             if len(balls) > 0:
                 for ball in balls:
                     if ball.y > screen.get_height(): #note the top-left defined coordinate system :)
-                        print("The ball has left the screen")
+                        
 
                         #create a new ball at the top
                         objects.remove(ball)
                         balls.remove(ball)
                         del ball
 
+                        if len(balls) == 0 and lives > 1:
+                            lives -= 1
+                            print(f"You lost a life, you have {lives} remaining ")
+                        elif len(balls) == 0 and lives == 1:
+                            print(f"You died!! :(")
+                            game_running = False
+                            menu_running = True
+            
+            for i in range(lives):
+                imp = pygame.image.load("C:\\Users\\TimCo\\OneDrive\\Dokumente\\Uni\\PuA\\Projekt\\pua-20242025-breakout\\images\\red_heart.png").convert()
+                imp = pygame.transform.scale(imp, (30,30))
+                # Using blit to copy content from one surface to other
+                screen.blit(imp, (5+i*30, 5))
 
             #update
             # pygame.time.wait(1) #slow things down by waiting 1 millisecond
             pygame.display.update()
             clock.tick(FPS)
+
 
     pygame.quit() # Call the quit() method outside the while loop to end the application.
