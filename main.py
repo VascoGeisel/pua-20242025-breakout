@@ -61,10 +61,10 @@ if __name__ == '__main__':
     clock = pygame.time.Clock()
 
     # initialize a ball
-    ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red')
+    ball = Ball(x = DISPLAY_WIDTH//2, y = 300, dx = 0, dy = 1, radius = 10, speed = 5, color='red')
 
     # initialize a second ball
-    ball2 = Ball(x = DISPLAY_WIDTH//2, y = 300, dx = 0, dy = -1, radius = 10, speed = 5, color='red')
+    ball2 = Ball(x = DISPLAY_WIDTH//2+ 20, y = 300, dx = 0, dy = -1, radius = 10, speed = 5, color='red')
 
     # initialize a paddle
     paddle_height = 10
@@ -154,6 +154,10 @@ if __name__ == '__main__':
                         game_running = True
                         print("The menu was closed and the game was opened")
                         brick_grid = create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 0.2, 5, DISPLAY_WIDTH, DISPLAY_HEIGHT) #generates list which represents brick grid
+                        for i in brick_grid:
+                            objects.append(i)
+                            ball.setCollidables(mydeepcopy(objects))
+                            ball2.setCollidables(mydeepcopy(objects))
                         print(brick_grid)
                     if highscore_button.is_clicked(event.pos): #when button is clicked, menu is getting closed and the highscore opens
                         menu_running = False
@@ -255,7 +259,7 @@ if __name__ == '__main__':
                 #create a new ball at the top
                 objects.remove(ball)
                 del ball
-                ball = Ball(x = DISPLAY_WIDTH//2, y = 30, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=mydeepcopy(objects))
+                ball = Ball(x = DISPLAY_WIDTH//2, y = 300, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=mydeepcopy(objects))
                 objects.append(ball)
                 ball2.setCollidables(mydeepcopy(objects))
 
