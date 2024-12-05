@@ -33,8 +33,6 @@ class Brick(Wall):
         self.colours_by_live = colours_by_live
         self.color = self.colours_by_live[0]
         self.lives = lives
-        self._x = x
-        self._y = y
         super().__init__(x, y, width, height)
     
     def was_hit(self, damage):

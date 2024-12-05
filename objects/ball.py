@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+from objects.brick import Brick
 
 class Ball(pygame.Rect):
     """
@@ -194,9 +195,9 @@ class Ball(pygame.Rect):
             if self.allow_collisions[collision_index]:              # checks if the Collision is a repetiotion
                 if type(self.collidables[collision_index]) != Ball:
                     self.frames_since_collision = 0                              # reset counter
-                    for collidable_index in range(0, 4):                         # iterate over all the collidable objects
+                    for collidable_index in [0, 3, 1, 2]:                         # iterate over all the collidable objects
                         if debugging:
-                            pygame.draw.line(screen, (255, 0, 255), self.collidables[collision_index].get_edges()[collidable_index][0], self.collidables[collision_index].get_edges()[collidable_index][1], 3) # only for debugging, draws outlines ob colided objects
+                            pygame.draw.line(screen, (255, 0, 255), self.collidables[collision_index].get_edges()[collidable_index][0], self.collidables[collision_index].get_edges()[collidable_index][1], 8) # only for debugging, draws outlines ob colided objects
                         if self.clipline(self.collidables[collision_index].get_edges()[collidable_index]):  # checks wich edge of collidable object ball collides with
                             print(f"clips with colidable_index: {collidable_index}")
                             if collidable_index == 0 or collidable_index == 3:                            # horizontal surfaces
@@ -208,7 +209,8 @@ class Ball(pygame.Rect):
                                 self.dx_old = self.dx           
 
                             elif collidable_index == 1 or collidable_index == 2:                          # vertical surfaces
-                                # print(f"A vertical Surface was hit")      
+                                # print(f"A vertical Surface was hit")     
+                                print(type(self.collidables[collision_index]))
                                 self.dx = -self.dx
                                 self.dy = self.dy
 
@@ -226,7 +228,7 @@ class Ball(pygame.Rect):
                                 self.dx_old = self.dx                     # changes dx of ball by random number 
                                 print(f"The Paddle was hit, dx has been changed by {randomnumber}")
 
-                            break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
+                            # break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
 
                 else:
                     print("Collision with ball")
