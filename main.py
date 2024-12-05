@@ -62,7 +62,11 @@ if __name__ == '__main__':
 
     balls = []
     def create_ball(x = DISPLAY_WIDTH//2, y = 300, dx = 0, dy = 1, radius = 10, speed = 5, color='red'):
-        new_ball = Ball(x=x, y=y, dx=dx, dy=dy, radius=radius, speed=speed, color=color)
+        """
+        Creates a ball, using the pygame Ball object and using default values for every argument
+        Also adds the new ball to the list of balls and objects and gives it the objects as collidables
+        """
+        new_ball = Ball(x=x, y=y, dx=dx, dy=dy, radius=radius, speed=speed, color=color) # create ball
         balls.append(new_ball)
         objects.append(new_ball)
         new_ball.setCollidables(mydeepcopy(objects))
@@ -76,10 +80,10 @@ if __name__ == '__main__':
     ceiling = Wall(0, 0, DISPLAY_WIDTH, -20)
     rightwall = Wall(DISPLAY_WIDTH, 0, 20, DISPLAY_HEIGHT)
     leftwall = Wall(0, 0, -20, DISPLAY_HEIGHT)
-    floor = Wall(0, DISPLAY_HEIGHT, DISPLAY_WIDTH, 30 )
+    floor = Wall(0, DISPLAY_HEIGHT, DISPLAY_WIDTH, 30 ) # for debugging only
 
     # Create a test Brick
-    Brick1 = Brick(400, 400, 50, 50)
+    # Brick1 = Brick(400, 400, 50, 50)
     old_objects = []
 
     lives = 3
@@ -121,7 +125,7 @@ if __name__ == '__main__':
     paddle.mright = False
 
     # if any object is added to the scene it has to be added to this list
-    objects = [paddle, ceiling, rightwall, leftwall, Brick1]    # lists of objects, the ball can collide with 
+    objects = [paddle, ceiling, rightwall, leftwall]    # lists of objects, the ball can collide with 
     for i in balls:
         objects.append(i)
     
@@ -207,10 +211,12 @@ if __name__ == '__main__':
         '''
         while game_running:
             
+            # check if the collidable objects have changes, is necceseray for ball collision
             if objects != old_objects:
                 for ball in balls:
                     ball.setCollidables(mydeepcopy(objects))
-
+            
+            # Create deepcopy of objects list, to check for changes (helps performace with ball collision)
             old_objects = mydeepcopy(objects)
 
             for event in pygame.event.get():
@@ -243,20 +249,18 @@ if __name__ == '__main__':
             for brick in range(0, len(brick_grid), 1):
                 brick_grid[brick].draw(screen)
 
-            # draw the ball
+            # draw the balls
             for ball in balls:
                 ball.draw(screen)
-            # move the ball one step
+
+            # move the balls one step
             for ball in balls:
                 ball.move()
 
             #draw the paddle
             paddle.draw(screen)
 
-            #draw the test Brick
-            Brick1.draw(screen)
-
-            # Collide the Ball with the given list of objects
+            # Collide the Balls with the given list of objects
             for ball in balls:
                 ball.collide(paddle, screen, debugging=True)  
   
@@ -271,12 +275,12 @@ if __name__ == '__main__':
                 for ball in balls:
                     if ball.y > screen.get_height(): #note the top-left defined coordinate system :)
                         
-
-                        #create a new ball at the top
+                        # remove ball that has left the screen from collidables and balls to save collisions
                         objects.remove(ball)
                         balls.remove(ball)
                         del ball
 
+                        # if no balls on screen -> reduce lives by one or loose game 
                         if len(balls) == 0 and lives > 1:
                             lives -= 1
                             print(f"You lost a life, you have {lives} remaining ")
@@ -285,6 +289,7 @@ if __name__ == '__main__':
                             game_running = False
                             menu_running = True
             
+            # display lives in form of hearts
             for i in range(lives):
                 dir = os.path.dirname(__file__)
                 filename = os.path.join(dir, 'images','red_heart.png')

@@ -187,13 +187,12 @@ class Ball(pygame.Rect):
         ## Collision Detection / Reflection
         # TODO: normalize the ball movement Vector, so its not becomming infinitly fast - Not neccesary
         
-            
+
         collision_index = self.collidelist(self.collidables) 
-        
 
         if collision_index >= 0:                                    # chechs if Ball collides with any collidable objects
             if self.allow_collisions[collision_index]:              # checks if the Collision is a repetiotion
-                if type(self.collidables[collision_index]) != Ball:
+                if type(self.collidables[collision_index]) != Ball:             # differenciate between ball - ball and other collisions
                     self.frames_since_collision = 0                              # reset counter
                     for collidable_index in [0, 3, 1, 2]:                         # iterate over all the collidable objects
                         if debugging:
@@ -227,16 +226,16 @@ class Ball(pygame.Rect):
                                 self.dx_old = self.dx                     # changes dx of ball by random number 
                                 print(f"The Paddle was hit, dx has been changed by {randomnumber}")
 
-                            break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
+                            break      # (most of the time) DO NOT REMOVE Limits collisions per frame per ball by 1 
 
-                else:
+                else:               # handel ball - ball collision
                     print("Collision with ball")
-                    self.dx_old = self.dx
+                    self.dx_old = self.dx   # create copies (non-mutable) of the dx and dy values to give to other ball 
                     self.dy_old = self.dy
                     self.dx = self.collidables[collision_index].dx_old
                     self.dy = self.collidables[collision_index].dy_old
                     pass
-            else:
+            else: # resets the allow colision value if there are no collisions with this object in this frame
                 for i in range(len(self.allow_collisions)):
                     if i != collision_index:
                         self.allow_collisions[i] = 1
