@@ -14,6 +14,7 @@ from objects.ball import Ball
 from objects.paddle import Paddle
 from objects.wall import Wall
 from objects.brick import Brick
+from objects.button import Button
 
 # this code is from https://stackoverflow.com/questions/46698824/python-deep-copy-without-using-copy-module
 # it was copied on 1.12.24 at 14:21 and has been altered to allow copy of any element in the list
@@ -53,12 +54,8 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size=(DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
     # create fonts
-    SCORE_FONT = pygame.font.Font(None, 30)
     HEADLINE_FONT = pygame.font.Font(None, 64)
-    SMALL_FONT = pygame.font.Font(None, 32)
-    
-    #Text creation
-    Score = SCORE_FONT.render("Hello KITty", True, "green")
+    NORMAL_FONT = pygame.font.Font(None, 32)
 
     # initialize the clock for FPS calculation
     clock = pygame.time.Clock()
@@ -133,16 +130,12 @@ if __name__ == '__main__':
             screen.blit(title_text, (DISPLAY_WIDTH // 2 - title_text.get_width() // 2, 60))
 
             #create play button
-            start_button_text = HEADLINE_FONT.render("PLAY", True, "black")
-            start_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2, start_button_text.get_width(), start_button_text.get_height())
-            pygame.draw.rect(screen, "red", start_button_position)
-            screen.blit(start_button_text, (DISPLAY_WIDTH // 2 - start_button_text.get_width() // 2, DISPLAY_HEIGHT // 2.5 - start_button_text.get_height() // 2))
+            start_button = Button(text = "PLAY", color_text = "black", color_button = "red", x = 2, y = 2.5, x_button = 2, y_button = 2, font = HEADLINE_FONT, screen = screen, display_width = DISPLAY_WIDTH, display_height = DISPLAY_HEIGHT)
+            start_button.draw()
 
             #create highscore button
-            highscore_button_text = HEADLINE_FONT.render("HIGHSCORE", True, "black")
-            highscore_button_position = pygame.Rect(DISPLAY_WIDTH // 2 - highscore_button_text.get_width() // 2, DISPLAY_HEIGHT // 1.4 - highscore_button_text.get_height() // 2 , highscore_button_text.get_width(), highscore_button_text.get_height())
-            pygame.draw.rect(screen, "red", highscore_button_position)
-            screen.blit(highscore_button_text, (DISPLAY_WIDTH // 2 - highscore_button_text.get_width() // 2, DISPLAY_HEIGHT // 1.4 - highscore_button_text.get_height() // 2))
+            highscore_button = Button(text = "HIGHSCORE", color_text = "black", color_button = "red", x = 2, y = 1.4, x_button = 2, y_button = 2, font = HEADLINE_FONT, screen = screen, display_width = DISPLAY_WIDTH, display_height = DISPLAY_HEIGHT)
+            highscore_button.draw()
 
             #update
             pygame.display.flip()
@@ -155,13 +148,13 @@ if __name__ == '__main__':
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if start_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the game opens
+                    if start_button.is_clicked(event.pos): #when button is clicked, menu is getting closed and the game opens
                         menu_running = False
                         game_running = True
                         print("The menu was closed and the game was opened")
                         brick_grid = create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 0.2, 5, DISPLAY_WIDTH, DISPLAY_HEIGHT) #generates list which represents brick grid
                         print(brick_grid)
-                    if highscore_button_position.collidepoint(event.pos): #when button is clicked, menu is getting closed and the highscore opens
+                    if highscore_button.is_clicked(event.pos): #when button is clicked, menu is getting closed and the highscore opens
                         menu_running = False
                         highscore_running = True
                         print("The menu was closed and the highscore was opened")
@@ -173,11 +166,9 @@ if __name__ == '__main__':
             screen.fill((0,0,0)) #0,0,0 is RGB color code for black
 
             #create return to menu button
-            return_to_menu_button_text = SMALL_FONT.render("RETURN TO MENU", True, "black")
-            return_to_menu_button_position = pygame.Rect(DISPLAY_WIDTH - return_to_menu_button_text.get_width(), DISPLAY_HEIGHT - return_to_menu_button_text.get_height(), return_to_menu_button_text.get_width(), return_to_menu_button_text.get_height())
-            pygame.draw.rect(screen, "red", return_to_menu_button_position)
-            screen.blit(return_to_menu_button_text, (DISPLAY_WIDTH - return_to_menu_button_text.get_width(), DISPLAY_HEIGHT - return_to_menu_button_text.get_height()))
-            
+            return_to_menu_button = Button(text = "RETURN TO MENU", color_text = "black", color_button = "red", x = 1, y = 1, x_button = 1, y_button = 1, font = NORMAL_FONT, screen = screen, display_width = DISPLAY_WIDTH, display_height = DISPLAY_HEIGHT)
+            return_to_menu_button.draw()
+
             #update
             pygame.display.flip()
 
@@ -189,7 +180,7 @@ if __name__ == '__main__':
                     pygame.quit()
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if return_to_menu_button_position.collidepoint(event.pos): #when button is clicked, highscore is getting closed and the menu opens
+                    if return_to_menu_button.is_clicked(event.pos): #when button is clicked, highscore is getting closed and the menu opens
                         highscore_running = False
                         menu_running = True
                         print("The highscore was closed and the menu was opened")
@@ -203,6 +194,8 @@ if __name__ == '__main__':
                 if event.type == pygame.QUIT:
                     running = False
                     game_running = False
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         paddle.mleft = True
@@ -221,9 +214,6 @@ if __name__ == '__main__':
             for brick in range(0, len(brick_grid), 1):
                 brick_grid[brick].draw(screen)
 
-            #show score
-            Score_position = Score.get_rect(center=(100,200))
-            screen.blit(Score, Score_position)
             # draw the ball
             ball.draw(screen)
             ball2.draw(screen)

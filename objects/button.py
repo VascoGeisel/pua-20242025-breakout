@@ -1,7 +1,7 @@
 import pygame
 
 class Button:
-    def __init__(self, text, color_text, color_button, x, y, font, screen, display_width, display_height):
+    def __init__(self, text, color_text, color_button, x, y, x_button, y_button, font, screen, display_width, display_height):
         """
         Initializes a button.
         
@@ -11,6 +11,8 @@ class Button:
         color_button: The color of the button background
         x: The horizontal position on the screen (divisor for centering)
         y: The vertical position on the screen (divisor for centering)
+        x_button: The horizontal transposition after seting the corner of the button (divisor for centering, 2 if not at the side or corner of the screen)
+        y_button: The horizontal transposition after seting the corner of the button (divisor for centering, 2 if not at the side or corner of the screen)
         font: The font used for the text
         screen: The pygame display surface
         display_width: The width of the display
@@ -21,6 +23,8 @@ class Button:
         self.color_button = color_button
         self.x = x
         self.y = y
+        self.x_button = x_button
+        self.y_button = y_button
         self.font = font
         self.screen = screen
         self.display_width = display_width
@@ -33,8 +37,8 @@ class Button:
         self.text_width = self.text_surface.get_width()
         self.text_height = self.text_surface.get_height()
         self.button_rect = pygame.Rect(
-            self.display_width // self.x - self.text_width // 2,
-            self.display_height // self.y - self.text_height // 2,
+            self.display_width // self.x - self.text_width // self.x_button,
+            self.display_height // self.y - self.text_height // self.y_button,
             self.text_width,
             self.text_height
         )
@@ -48,8 +52,8 @@ class Button:
         # Draw the text
         self.screen.blit(
             self.text_surface,
-            (self.display_width // self.x - self.text_width // 2,
-             self.display_height // self.y - self.text_height // 2)
+            (self.display_width // self.x - self.text_width // self.x_button,
+             self.display_height // self.y - self.text_height // self.y_button)
         )
     
     def is_clicked(self, mouse_pos):
