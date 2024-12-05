@@ -228,7 +228,7 @@ class Ball(pygame.Rect):
                                 self.dx_old = self.dx                     # changes dx of ball by random number 
                                 print(f"The Paddle was hit, dx has been changed by {randomnumber}")
 
-                            # break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
+                            break                                           # DO NOT REMOVE Limits collisions per frame per ball by 1 
 
                 else:
                     print("Collision with ball")
