@@ -286,7 +286,10 @@ if __name__ == '__main__':
                             menu_running = True
             
             for i in range(lives):
-                imp = pygame.image.load("C:\\Users\\TimCo\\OneDrive\\Dokumente\\Uni\\PuA\\Projekt\\pua-20242025-breakout\\images\\red_heart.png").convert()
+                dir = os.path.dirname(__file__)
+                filename = os.path.join(dir, 'images','red_heart.png')
+
+                imp = pygame.image.load(filename).convert()
                 imp = pygame.transform.scale(imp, (30,30))
                 # Using blit to copy content from one surface to other
                 screen.blit(imp, (5+i*30, 5))
