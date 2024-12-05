@@ -54,7 +54,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size=(DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
     # create fonts
-    HEADLINE_FONT = pygame.font.Font(None, 64)
+    LARGE_FONT = pygame.font.Font(None, 64)
     NORMAL_FONT = pygame.font.Font(None, 32)
 
     # initialize the clock for FPS calculation
@@ -107,18 +107,19 @@ if __name__ == '__main__':
         else:
             raise TypeError("The bricks don't fit on the display!")
     
+    running = True
     menu_running = True
     highscore_running = False
+    post_game_menu_running =False
     game_running = False
     paddle.mleft = False
     paddle.mright = False
 
-    
     # if any object is added to the scene it has to be added to this list
     objects = [paddle, ceiling, rightwall, leftwall, Brick1, ball2, ball]    # lists of objects, the ball can collide with 
     ball.setCollidables(mydeepcopy(objects))
     ball2.setCollidables(mydeepcopy(objects))
-    running = True
+    
     while running:
         while menu_running:
 
@@ -126,15 +127,15 @@ if __name__ == '__main__':
             screen.fill((0,0,0)) #0,0,0 is RGB color code for black
 
             #create Headline
-            title_text = HEADLINE_FONT.render("Mainmenu", True, "red")
+            title_text = LARGE_FONT.render("Mainmenu", True, "red")
             screen.blit(title_text, (DISPLAY_WIDTH // 2 - title_text.get_width() // 2, 60))
 
             #create play button
-            start_button = Button(text = "PLAY", color_text = "black", color_button = "red", x = 2, y = 2.5, x_button = 2, y_button = 2, font = HEADLINE_FONT, screen = screen, display_width = DISPLAY_WIDTH, display_height = DISPLAY_HEIGHT)
+            start_button = Button(text = "PLAY", color_text = "black", color_button = "red", x = 2, y = 2.5, x_button = 2, y_button = 2, font = LARGE_FONT, screen = screen, display_width = DISPLAY_WIDTH, display_height = DISPLAY_HEIGHT)
             start_button.draw()
 
             #create highscore button
-            highscore_button = Button(text = "HIGHSCORE", color_text = "black", color_button = "red", x = 2, y = 1.4, x_button = 2, y_button = 2, font = HEADLINE_FONT, screen = screen, display_width = DISPLAY_WIDTH, display_height = DISPLAY_HEIGHT)
+            highscore_button = Button(text = "HIGHSCORE", color_text = "black", color_button = "red", x = 2, y = 1.4, x_button = 2, y_button = 2, font = LARGE_FONT, screen = screen, display_width = DISPLAY_WIDTH, display_height = DISPLAY_HEIGHT)
             highscore_button.draw()
 
             #update
@@ -185,9 +186,14 @@ if __name__ == '__main__':
                         menu_running = True
                         print("The highscore was closed and the menu was opened")
 
-                        
-        
-        
+        '''               
+        while post_game_menu_running:
+
+            #always draw a black screen. then add objects as needed.
+            screen.fill((0,0,0)) #0,0,0 is RGB color code for black
+
+            break
+        '''
         while game_running:
             
             for event in pygame.event.get():
