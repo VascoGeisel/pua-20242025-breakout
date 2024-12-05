@@ -60,11 +60,12 @@ if __name__ == '__main__':
     # initialize the clock for FPS calculation
     clock = pygame.time.Clock()
 
-    # initialize a ball
-    ball = Ball(x = DISPLAY_WIDTH//2, y = 300, dx = 0, dy = 1, radius = 10, speed = 5, color='red')
-
-    # initialize a second ball
-    ball2 = Ball(x = DISPLAY_WIDTH//2+ 20, y = 300, dx = 0, dy = -1, radius = 10, speed = 5, color='red')
+    balls = []
+    def create_ball(x = DISPLAY_WIDTH//2, y = 300, dx = 0, dy = 1, radius = 10, speed = 5, color='red'):
+        new_ball = Ball(x=x, y=y, dx=dx, dy=dy, radius=radius, speed=speed, color=color)
+        balls.append(new_ball)
+        objects.append(new_ball)
+        new_ball.setCollidables(mydeepcopy(objects))
 
     # initialize a paddle
     paddle_height = 10
@@ -75,9 +76,11 @@ if __name__ == '__main__':
     ceiling = Wall(0, 0, DISPLAY_WIDTH, -20)
     rightwall = Wall(DISPLAY_WIDTH, 0, 20, DISPLAY_HEIGHT)
     leftwall = Wall(0, 0, -20, DISPLAY_HEIGHT)
+    floor = Wall(0, DISPLAY_HEIGHT, DISPLAY_WIDTH, 30 )
 
     # Create a test Brick
     Brick1 = Brick(400, 400, 50, 50)
+    old_objects = []
 
     # Create grid of Bricks
     def create_bricks(position_x=10, position_y=DISPLAY_HEIGHT/7, amount_per_row=10, amount_per_column=5, percent_height=0.2, distance=5, DISPLAY_WIDTH = DISPLAY_WIDTH,  DISPLAY_HEIGHT = DISPLAY_HEIGHT):
@@ -116,9 +119,9 @@ if __name__ == '__main__':
     paddle.mright = False
 
     # if any object is added to the scene it has to be added to this list
-    objects = [paddle, ceiling, rightwall, leftwall, Brick1, ball2, ball]    # lists of objects, the ball can collide with 
-    ball.setCollidables(mydeepcopy(objects))
-    ball2.setCollidables(mydeepcopy(objects))
+    objects = [paddle, ceiling, rightwall, leftwall, Brick1]    # lists of objects, the ball can collide with 
+    for i in balls:
+        objects.append(i)
     
     while running:
         while menu_running:
@@ -156,8 +159,10 @@ if __name__ == '__main__':
                         brick_grid = create_bricks(10, DISPLAY_HEIGHT/7, 10, 5, 0.2, 5, DISPLAY_WIDTH, DISPLAY_HEIGHT) #generates list which represents brick grid
                         for i in brick_grid:
                             objects.append(i)
+
+                        for ball in balls:
                             ball.setCollidables(mydeepcopy(objects))
-                            ball2.setCollidables(mydeepcopy(objects))
+
                         print(brick_grid)
                     if highscore_button.is_clicked(event.pos): #when button is clicked, menu is getting closed and the highscore opens
                         menu_running = False
@@ -200,6 +205,12 @@ if __name__ == '__main__':
         '''
         while game_running:
             
+            if objects != old_objects:
+                for ball in balls:
+                    ball.setCollidables(mydeepcopy(objects))
+
+            old_objects = mydeepcopy(objects)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -214,12 +225,14 @@ if __name__ == '__main__':
                     if event.key == pygame.K_ESCAPE:
                         game_running = False
                         menu_running = True
+                    if event.key == pygame.K_b:
+                        create_ball(random.randint(30, DISPLAY_WIDTH-30), random.randint(300, DISPLAY_HEIGHT-200))
                 elif event.type == pygame.KEYUP:
                     if event.key == pygame.K_LEFT or event.key == pygame.K_a:
                         paddle.mleft = False
                     if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
                         paddle.mright = False
-                
+                    
 
             # always draw a black screen. then add objects as needed.
             screen.fill((0,0,0)) #0,0,0 is RGB color code for black
@@ -229,12 +242,11 @@ if __name__ == '__main__':
                 brick_grid[brick].draw(screen)
 
             # draw the ball
-            ball.draw(screen)
-            ball2.draw(screen)
+            for ball in balls:
+                ball.draw(screen)
             # move the ball one step
-            ball.move()
-
-            ball2.move()
+            for ball in balls:
+                ball.move()
 
             #draw the paddle
             paddle.draw(screen)
@@ -243,9 +255,9 @@ if __name__ == '__main__':
             Brick1.draw(screen)
 
             # Collide the Ball with the given list of objects
-            ball.collide(paddle, screen, debugging=True)  
-            ball2.collide(paddle, screen, debugging=True)       
-
+            for ball in balls:
+                ball.collide(paddle, screen, debugging=True)  
+  
             # move the paddle
             if paddle.mleft:
                 paddle.move_left()
@@ -253,18 +265,19 @@ if __name__ == '__main__':
                 paddle.move_right(screen)
 
             # check if the ball has left the screen at the bottom, if yes, create a new one
-            if ball.y > screen.get_height(): #note the top-left defined coordinate system :)
-                print("The ball has left the screen")
-                
-                #create a new ball at the top
-                objects.remove(ball)
-                del ball
-                ball = Ball(x = DISPLAY_WIDTH//2, y = 300, dx = 0, dy = 1, radius = 10, speed = 5, color='red', collidables_list=mydeepcopy(objects))
-                objects.append(ball)
-                ball2.setCollidables(mydeepcopy(objects))
+            if len(balls) > 0:
+                for ball in balls:
+                    if ball.y > screen.get_height(): #note the top-left defined coordinate system :)
+                        print("The ball has left the screen")
+
+                        #create a new ball at the top
+                        objects.remove(ball)
+                        balls.remove(ball)
+                        del ball
+
 
             #update
-            pygame.time.wait(1) #slow things down by waiting 1 millisecond
+            # pygame.time.wait(1) #slow things down by waiting 1 millisecond
             pygame.display.update()
             clock.tick(FPS)
 
